@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://manager.dhoport.app/resource-pack/schema/manifest.schema.json",
+  "title": "DHO .dho-pack manifest format 1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["formatVersion", "packId", "name", "author", "version", "license", "publisher", "source", "compatibility", "files", "components"],
+  "properties": {
+    "formatVersion": { "const": 1 },
+    "packId": { "$ref": "#/$defs/id" },
+    "name": { "$ref": "#/$defs/name" },
+    "author": { "$ref": "#/$defs/name" },
+    "version": { "$ref": "#/$defs/semver" },
+    "license": { "$ref": "#/$defs/name" },
+    "publisher": { "$ref": "#/$defs/publisher" },
+    "source": { "$ref": "#/$defs/attribution" },
+    "update": { "type": "object", "additionalProperties": false, "properties": { "manifestUrl": { "type": "string", "pattern": "^https://" } } },
+    "thumbnail": { "enum": ["thumbnail.webp", "thumbnail.png", "thumbnail.jpg", "thumbnail.jpeg", "thumbnail.gif"] },
+    "compatibility": {
+      "type": "object", "additionalProperties": false, "required": ["minimumManagerVersion"],
+      "properties": { "minimumManagerVersion": { "$ref": "#/$defs/semver" }, "maximumManagerVersionExclusive": { "$ref": "#/$defs/semver" } }
+    },
+    "files": { "type": "object", "propertyNames": { "$ref": "#/$defs/safePath" }, "additionalProperties": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" } },
+    "componentRequirements": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "mapData": { "$ref": "#/$defs/componentList" }, "poiData": { "$ref": "#/$defs/componentList" },
+        "markerSet": { "$ref": "#/$defs/componentList" }, "infoPanelSkin": { "$ref": "#/$defs/componentList" },
+        "steeringHudSkin": { "$ref": "#/$defs/componentList" }, "mapHudSkin": { "$ref": "#/$defs/componentList" },
+        "appIcon": { "$ref": "#/$defs/componentList" }
+      }
+    },
+    "components": {
+      "type": "object", "minProperties": 1, "additionalProperties": false,
+      "properties": {
+        "mapData": { "$ref": "#/$defs/mapData" }, "poiData": { "$ref": "#/$defs/poiData" },
+        "markerSet": { "$ref": "#/$defs/markerSet" }, "infoPanelSkin": { "$ref": "#/$defs/infoPanelSkin" },
+        "steeringHudSkin": { "$ref": "#/$defs/steeringHudSkin" }, "mapHudSkin": { "$ref": "#/$defs/mapHudSkin" },
+        "appIcon": { "$ref": "#/$defs/appIcon" }
+      }
+    }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$" },
+    "name": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "semver": { "type": "string", "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?$" },
+    "color": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+    "safePath": { "type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*\\\\)[^/]+(?:/[^/]+)*$" },
+    "identity": { "type": "object", "required": ["id", "name"], "properties": { "id": { "$ref": "#/$defs/id" }, "name": { "$ref": "#/$defs/name" } } },
+    "publisher": { "type": "object", "additionalProperties": false, "required": ["id", "name"], "properties": { "id": { "$ref": "#/$defs/id" }, "name": { "$ref": "#/$defs/name" }, "url": { "type": "string", "pattern": "^https://" } } },
+    "attribution": { "type": "object", "additionalProperties": false, "required": ["name"], "properties": { "id": { "$ref": "#/$defs/id" }, "name": { "$ref": "#/$defs/name" }, "url": { "type": "string", "pattern": "^https://" } } },
+    "componentList": { "type": "array", "uniqueItems": true, "items": { "enum": ["mapData", "poiData", "markerSet", "infoPanelSkin", "steeringHudSkin", "mapHudSkin", "appIcon"] } },
+    "appIcon": {
+      "type": "object", "required": ["window"], "additionalProperties": false,
+      "properties": {
+        "window": { "$ref": "#/$defs/pngPath" }
+      }
+    },
+    "pngPath": {
+      "allOf": [
+        { "$ref": "#/$defs/safePath" },
+        { "pattern": "\\.[Pp][Nn][Gg]$" }
+      ]
+    },
+    "mapData": {
+      "allOf": [{ "$ref": "#/$defs/identity" }], "type": "object", "additionalProperties": false,
+      "required": ["id", "name", "dataVersion", "coordinateSpace", "coastline", "seaRegions"],
+      "properties": { "id": { "$ref": "#/$defs/id" }, "name": { "$ref": "#/$defs/name" }, "dataVersion": { "$ref": "#/$defs/name" }, "coordinateSpace": { "const": "game 16384x8192" }, "coastline": { "$ref": "#/$defs/safePath" }, "seaRegions": { "$ref": "#/$defs/safePath" } }
+    },
+    "poiData": {
+      "allOf": [{ "$ref": "#/$defs/identity" }], "type": "object", "additionalProperties": false,
+      "required": ["id", "name", "dataVersion", "coordinateSpace", "source"],
+      "properties": { "id": { "$ref": "#/$defs/id" }, "name": { "$ref": "#/$defs/name" }, "dataVersion": { "$ref": "#/$defs/name" }, "coordinateSpace": { "const": "game 16384x8192" }, "source": { "$ref": "#/$defs/safePath" } }
+    },
+    "infoPanelSkin": {
+      "type": "object", "additionalProperties": false, "required": ["id", "name", "colors", "frame"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" }, "name": { "$ref": "#/$defs/name" },
+        "colors": { "$ref": "#/$defs/infoColors" }, "frame": { "$ref": "#/$defs/infoFrame" },
+        "navigator": { "$ref": "#/$defs/navigatorSkin" }
+      }
+    },
+    "infoColors": {
+      "type": "object", "additionalProperties": false,
+      "required": ["panelBackground", "panelBorder", "primaryText", "secondaryText", "mutedText", "accent", "routeHighlight", "status", "rule", "arrivalBackground", "arrivalBorder", "arrivalText", "editBackground", "editText", "editBorder", "editControlBorder"],
+      "properties": {
+        "panelBackground": { "$ref": "#/$defs/color" }, "panelBorder": { "$ref": "#/$defs/color" }, "primaryText": { "$ref": "#/$defs/color" }, "secondaryText": { "$ref": "#/$defs/color" },
+        "mutedText": { "$ref": "#/$defs/color" }, "accent": { "$ref": "#/$defs/color" }, "routeHighlight": { "$ref": "#/$defs/color" }, "status": { "$ref": "#/$defs/color" },
+        "rule": { "$ref": "#/$defs/color" }, "arrivalBackground": { "$ref": "#/$defs/color" }, "arrivalBorder": { "$ref": "#/$defs/color" }, "arrivalText": { "$ref": "#/$defs/color" },
+        "editBackground": { "$ref": "#/$defs/color" }, "editText": { "$ref": "#/$defs/color" }, "editBorder": { "$ref": "#/$defs/color" }, "editControlBorder": { "$ref": "#/$defs/color" }
+      }
+    },
+    "infoFrame": { "type": "object", "additionalProperties": false, "required": ["borderWidth", "cornerRadius", "backdropBlur", "shadow"], "properties": { "borderWidth": { "type": "number", "minimum": 0, "maximum": 4 }, "cornerRadius": { "type": "number", "minimum": 0, "maximum": 24 }, "backdropBlur": { "type": "number", "minimum": 0, "maximum": 20 }, "shadow": { "enum": ["none", "soft", "strong"] } } },
+    "navigatorSkin": {
+      "type": "object", "additionalProperties": false, "required": ["colors", "cornerRadius"],
+      "properties": {
+        "colors": { "type": "object", "additionalProperties": false, "required": ["background", "surface", "text", "mutedText", "line", "rule", "accent", "danger", "focus"], "properties": { "background": { "$ref": "#/$defs/color" }, "surface": { "$ref": "#/$defs/color" }, "text": { "$ref": "#/$defs/color" }, "mutedText": { "$ref": "#/$defs/color" }, "line": { "$ref": "#/$defs/color" }, "rule": { "$ref": "#/$defs/color" }, "accent": { "$ref": "#/$defs/color" }, "danger": { "$ref": "#/$defs/color" }, "focus": { "$ref": "#/$defs/color" } } },
+        "cornerRadius": { "type": "number", "minimum": 0, "maximum": 24 }
+      }
+    },
+    "steeringHudSkin": {
+      "type": "object", "additionalProperties": false, "required": ["id", "name", "colors", "opacity", "centerMarker"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" }, "name": { "$ref": "#/$defs/name" },
+        "colors": { "type": "object", "additionalProperties": false, "required": ["neutral", "surface"], "properties": { "neutral": { "$ref": "#/$defs/color" }, "surface": { "$ref": "#/$defs/color" } } },
+        "guidanceColors": { "type": "object", "additionalProperties": false, "required": ["direction", "target", "aligned", "centerMarker"], "properties": { "direction": { "$ref": "#/$defs/color" }, "target": { "$ref": "#/$defs/color" }, "aligned": { "$ref": "#/$defs/color" }, "centerMarker": { "$ref": "#/$defs/color" } } },
+        "opacity": { "$ref": "#/$defs/steeringOpacity" }, "centerMarker": { "$ref": "#/$defs/centerMarker" }
+      }
+    },
+    "steeringOpacity": {
+      "type": "object", "additionalProperties": false,
+      "required": ["guideLine", "tick", "majorTick", "minorTick", "compassText", "minorCompassText", "centerLabel", "targetMarkerSurface", "targetLabelSurface"],
+      "properties": { "guideLine": { "$ref": "#/$defs/unit" }, "tick": { "$ref": "#/$defs/unit" }, "majorTick": { "$ref": "#/$defs/unit" }, "minorTick": { "$ref": "#/$defs/unit" }, "compassText": { "$ref": "#/$defs/unit" }, "minorCompassText": { "$ref": "#/$defs/unit" }, "centerLabel": { "$ref": "#/$defs/unit" }, "targetMarkerSurface": { "$ref": "#/$defs/unit" }, "targetLabelSurface": { "$ref": "#/$defs/unit" } }
+    },
+    "centerMarker": { "type": "object", "additionalProperties": false, "required": ["verticalLength", "horizontalLength", "diamondSize", "lineWidth"], "properties": { "verticalLength": { "type": "number", "minimum": 8, "maximum": 256 }, "horizontalLength": { "type": "number", "minimum": 8, "maximum": 256 }, "diamondSize": { "type": "number", "minimum": 4, "maximum": 64 }, "lineWidth": { "type": "number", "minimum": 1, "maximum": 4 } } },
+    "mapHudSkin": {
+      "type": "object", "additionalProperties": false, "required": ["id", "name", "colors", "frame"],
+      "properties": { "id": { "$ref": "#/$defs/id" }, "name": { "$ref": "#/$defs/name" }, "colors": { "$ref": "#/$defs/mapColors" }, "frame": { "$ref": "#/$defs/mapFrame" }, "mapTheme": { "$ref": "#/$defs/mapTheme" }, "navigationTheme": { "$ref": "#/$defs/navigationTheme" } }
+    },
+    "mapColors": { "type": "object", "additionalProperties": false, "required": ["surface", "text", "mutedText", "border", "accent", "connected", "waiting", "editText"], "properties": { "surface": { "$ref": "#/$defs/color" }, "text": { "$ref": "#/$defs/color" }, "mutedText": { "$ref": "#/$defs/color" }, "border": { "$ref": "#/$defs/color" }, "accent": { "$ref": "#/$defs/color" }, "connected": { "$ref": "#/$defs/color" }, "waiting": { "$ref": "#/$defs/color" }, "editText": { "$ref": "#/$defs/color" } } },
+    "mapFrame": { "type": "object", "additionalProperties": false, "required": ["statusSurfaceOpacity", "highlightedSurfaceOpacity", "borderOpacity", "editSurfaceOpacity", "editBorderWidth"], "properties": { "statusSurfaceOpacity": { "$ref": "#/$defs/unit" }, "highlightedSurfaceOpacity": { "$ref": "#/$defs/unit" }, "borderOpacity": { "$ref": "#/$defs/unit" }, "editSurfaceOpacity": { "$ref": "#/$defs/unit" }, "editBorderWidth": { "type": "number", "minimum": 1, "maximum": 4 } } },
+    "mapTheme": {
+      "type": "object", "additionalProperties": false,
+      "required": ["vectorOpacity", "oceanColor", "oceanOpacity", "showLandFill", "landFillColor", "landFillOpacity", "showCoastline", "coastlineColor", "coastlineOpacity", "coastlineWidth", "coastlinePattern", "showSeaRegions", "seaRegionColor", "seaRegionOpacity", "seaRegionWidth", "seaRegionPattern", "showCurrentSeaRegion", "currentSeaRegionColor", "currentSeaRegionOpacity", "showSeaRegionLabels", "seaRegionLabelColor", "seaRegionLabelOpacity", "seaRegionLabelSize"],
+      "properties": {
+        "vectorOpacity": { "$ref": "#/$defs/unit" }, "oceanColor": { "$ref": "#/$defs/color" }, "oceanOpacity": { "$ref": "#/$defs/unit" },
+        "showLandFill": { "type": "boolean" }, "landFillColor": { "$ref": "#/$defs/color" }, "landFillOpacity": { "$ref": "#/$defs/unit" },
+        "showCoastline": { "type": "boolean" }, "coastlineColor": { "$ref": "#/$defs/color" }, "coastlineOpacity": { "$ref": "#/$defs/unit" }, "coastlineWidth": { "type": "number", "minimum": 0, "maximum": 6 }, "coastlinePattern": { "$ref": "#/$defs/pattern" },
+        "showSeaRegions": { "type": "boolean" }, "seaRegionColor": { "$ref": "#/$defs/color" }, "seaRegionOpacity": { "$ref": "#/$defs/unit" }, "seaRegionWidth": { "type": "number", "minimum": 0, "maximum": 6 }, "seaRegionPattern": { "$ref": "#/$defs/pattern" },
+        "showCurrentSeaRegion": { "type": "boolean" }, "currentSeaRegionColor": { "$ref": "#/$defs/color" }, "currentSeaRegionOpacity": { "$ref": "#/$defs/unit" },
+        "showSeaRegionLabels": { "type": "boolean" }, "seaRegionLabelColor": { "$ref": "#/$defs/color" }, "seaRegionLabelOpacity": { "$ref": "#/$defs/unit" }, "seaRegionLabelSize": { "type": "number", "minimum": 0, "maximum": 24 }
+      }
+    },
+    "navigationTheme": { "type": "object", "additionalProperties": false, "required": ["course", "compass", "mouse", "track", "route"], "properties": { "course": { "$ref": "#/$defs/line" }, "compass": { "$ref": "#/$defs/line" }, "mouse": { "$ref": "#/$defs/line" }, "track": { "$ref": "#/$defs/line" }, "route": { "$ref": "#/$defs/line" } } },
+    "line": { "type": "object", "additionalProperties": false, "required": ["color", "pattern", "width", "opacity"], "properties": { "color": { "$ref": "#/$defs/color" }, "pattern": { "$ref": "#/$defs/pattern" }, "width": { "type": "number", "minimum": 0.25, "maximum": 8 }, "opacity": { "$ref": "#/$defs/unit" } } },
+    "markerSet": {
+      "type": "object", "additionalProperties": false, "required": ["id", "name", "ship", "route", "poi", "personal"],
+      "properties": { "id": { "$ref": "#/$defs/id" }, "name": { "$ref": "#/$defs/name" }, "assets": { "type": "object", "maxProperties": 64, "propertyNames": { "$ref": "#/$defs/id" }, "additionalProperties": { "$ref": "#/$defs/markerAsset" } }, "slots": { "$ref": "#/$defs/markerSlots" }, "ship": { "$ref": "#/$defs/shipMarker" }, "route": { "$ref": "#/$defs/routeMarker" }, "poi": { "$ref": "#/$defs/poiMarker" }, "personal": { "$ref": "#/$defs/personalMarker" } }
+    },
+    "markerAsset": { "type": "object", "additionalProperties": false, "required": ["path", "displayWidth", "displayHeight", "anchorX", "anchorY", "rotateWithHeading"], "properties": { "path": { "$ref": "#/$defs/safePath" }, "displayWidth": { "type": "number", "minimum": 4, "maximum": 256 }, "displayHeight": { "type": "number", "minimum": 4, "maximum": 256 }, "anchorX": { "$ref": "#/$defs/unit" }, "anchorY": { "$ref": "#/$defs/unit" }, "rotateWithHeading": { "type": "boolean" } } },
+    "markerSlots": { "type": "object", "additionalProperties": false, "properties": { "ship": { "$ref": "#/$defs/id" }, "waypoint": { "$ref": "#/$defs/id" }, "automaticWaypoint": { "$ref": "#/$defs/id" }, "destination": { "$ref": "#/$defs/id" }, "poi": { "type": "object", "additionalProperties": { "$ref": "#/$defs/id" } }, "personal": { "type": "object", "additionalProperties": { "$ref": "#/$defs/id" } } } },
+    "shipMarker": { "type": "object", "additionalProperties": false, "required": ["background", "backgroundOpacity", "border", "fill", "stroke", "radius", "length", "halfWidth", "strokeWidth"], "properties": { "background": { "$ref": "#/$defs/color" }, "backgroundOpacity": { "$ref": "#/$defs/unit" }, "border": { "$ref": "#/$defs/color" }, "fill": { "$ref": "#/$defs/color" }, "stroke": { "$ref": "#/$defs/color" }, "radius": { "type": "number", "minimum": 2, "maximum": 32 }, "length": { "type": "number", "minimum": 3, "maximum": 48 }, "halfWidth": { "type": "number", "minimum": 2, "maximum": 32 }, "strokeWidth": { "type": "number", "minimum": 0.5, "maximum": 6 } } },
+    "routeMarker": { "type": "object", "additionalProperties": false, "required": ["fill", "text", "inactiveStroke", "waypointShape", "destinationShape", "waypointRadius", "destinationRadius", "strokeWidth"], "properties": { "fill": { "$ref": "#/$defs/color" }, "text": { "$ref": "#/$defs/color" }, "inactiveStroke": { "$ref": "#/$defs/color" }, "waypointShape": { "$ref": "#/$defs/shape" }, "destinationShape": { "$ref": "#/$defs/shape" }, "waypointRadius": { "type": "number", "minimum": 4, "maximum": 40 }, "destinationRadius": { "type": "number", "minimum": 4, "maximum": 40 }, "strokeWidth": { "type": "number", "minimum": 0.5, "maximum": 8 }, "automatic": { "type": "object", "additionalProperties": false, "properties": { "fill": { "$ref": "#/$defs/color" }, "stroke": { "$ref": "#/$defs/color" }, "shape": { "$ref": "#/$defs/shape" }, "radius": { "type": "number", "minimum": 2, "maximum": 24 }, "strokeWidth": { "type": "number", "minimum": 0.5, "maximum": 6 } } } } },
+    "poiMarker": { "type": "object", "additionalProperties": false, "required": ["background", "backgroundOpacity", "border", "focus", "focusText", "labelText", "labelHalo", "radius", "glyphRadius", "labelFontSize", "types"], "properties": { "background": { "$ref": "#/$defs/color" }, "backgroundOpacity": { "$ref": "#/$defs/unit" }, "border": { "$ref": "#/$defs/color" }, "focus": { "$ref": "#/$defs/color" }, "focusText": { "$ref": "#/$defs/color" }, "labelText": { "$ref": "#/$defs/color" }, "labelHalo": { "$ref": "#/$defs/color" }, "radius": { "type": "number", "minimum": 2, "maximum": 24 }, "glyphRadius": { "type": "number", "minimum": 1, "maximum": 20 }, "labelFontSize": { "type": "number", "minimum": 6, "maximum": 24 }, "types": { "$ref": "#/$defs/poiTypes" } } },
+    "poiTypes": { "type": "object", "additionalProperties": false, "required": ["port", "guild_city", "landing", "outskirts", "inland", "inland_city", "private_farm", "sea"], "properties": { "port": { "$ref": "#/$defs/poiTypeStyle" }, "guild_city": { "$ref": "#/$defs/poiTypeStyle" }, "landing": { "$ref": "#/$defs/poiTypeStyle" }, "outskirts": { "$ref": "#/$defs/poiTypeStyle" }, "inland": { "$ref": "#/$defs/poiTypeStyle" }, "inland_city": { "$ref": "#/$defs/poiTypeStyle" }, "private_farm": { "$ref": "#/$defs/poiTypeStyle" }, "sea": { "$ref": "#/$defs/poiTypeStyle" } } },
+    "poiTypeStyle": { "type": "object", "additionalProperties": false, "required": ["fill", "shape"], "properties": { "fill": { "$ref": "#/$defs/color" }, "shape": { "$ref": "#/$defs/shape" } } },
+    "personalMarker": { "type": "object", "additionalProperties": false, "required": ["border", "glyph", "radius", "glyphStrokeWidth", "icons"], "properties": { "border": { "$ref": "#/$defs/color" }, "glyph": { "$ref": "#/$defs/color" }, "radius": { "type": "number", "minimum": 3, "maximum": 32 }, "glyphStrokeWidth": { "type": "number", "minimum": 0.5, "maximum": 6 }, "icons": { "$ref": "#/$defs/personalIcons" }, "customTypes": { "type": "object", "maxProperties": 32, "propertyNames": { "$ref": "#/$defs/id" }, "additionalProperties": { "$ref": "#/$defs/customMarker" } } } },
+    "personalIcons": { "type": "object", "additionalProperties": false, "required": ["star", "port", "trade", "danger", "discovery", "memo"], "properties": { "star": { "$ref": "#/$defs/fill" }, "port": { "$ref": "#/$defs/fill" }, "trade": { "$ref": "#/$defs/fill" }, "danger": { "$ref": "#/$defs/fill" }, "discovery": { "$ref": "#/$defs/fill" }, "memo": { "$ref": "#/$defs/fill" } } },
+    "fill": { "type": "object", "additionalProperties": false, "required": ["fill"], "properties": { "fill": { "$ref": "#/$defs/color" } } },
+    "customMarker": { "type": "object", "additionalProperties": false, "required": ["name", "fallbackIcon"], "properties": { "name": { "type": "string", "minLength": 1, "maxLength": 40 }, "fallbackIcon": { "$ref": "#/$defs/personalIcon" }, "asset": { "$ref": "#/$defs/id" } } },
+    "shape": { "enum": ["circle", "diamond", "triangle", "square"] },
+    "personalIcon": { "enum": ["star", "port", "trade", "danger", "discovery", "memo"] },
+    "pattern": { "enum": ["solid", "dashed", "dotted"] },
+    "unit": { "type": "number", "minimum": 0, "maximum": 1 }
+  }
+}

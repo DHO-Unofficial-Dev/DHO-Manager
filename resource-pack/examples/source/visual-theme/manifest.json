@@ -1,0 +1,218 @@
+{
+  "formatVersion": 1,
+  "packId": "community.example.visual-theme",
+  "name": "완전한 화면 테마 예시",
+  "author": "DHO Manager",
+  "version": "0.1.0",
+  "license": "CC0-1.0",
+  "publisher": {
+    "id": "community.example",
+    "name": "DHO 리소스팩 예제"
+  },
+  "source": {
+    "name": "문서용 직접 제작 예제"
+  },
+  "compatibility": {
+    "minimumManagerVersion": "2.1.1",
+    "maximumManagerVersionExclusive": "3.0.0"
+  },
+  "files": {},
+  "componentRequirements": {},
+  "components": {
+    "infoPanelSkin": {
+      "id": "community.example.visual-theme.info-panel",
+      "name": "완전한 정보 패널 예시",
+      "colors": {
+        "panelBackground": "#101820",
+        "panelBorder": "#6B7C8C",
+        "primaryText": "#F4EEE2",
+        "secondaryText": "#A9BAC5",
+        "mutedText": "#8196A5",
+        "accent": "#E8A33A",
+        "routeHighlight": "#F0C768",
+        "status": "#D27A67",
+        "rule": "#2B4050",
+        "arrivalBackground": "#463615",
+        "arrivalBorder": "#7E6532",
+        "arrivalText": "#F0C768",
+        "editBackground": "#07131D",
+        "editText": "#F4EEE2",
+        "editBorder": "#E8A33A",
+        "editControlBorder": "#6A7D8C"
+      },
+      "frame": {
+        "borderWidth": 1,
+        "cornerRadius": 4,
+        "backdropBlur": 4,
+        "shadow": "strong"
+      },
+      "navigator": {
+        "colors": {
+          "background": "#0B1218",
+          "surface": "#17232D",
+          "text": "#F4EEE2",
+          "mutedText": "#A9BAC5",
+          "line": "#6B4A22",
+          "rule": "#263744",
+          "accent": "#E8A33A",
+          "danger": "#D45D4C",
+          "focus": "#F0C768"
+        },
+        "cornerRadius": 4
+      }
+    },
+    "steeringHudSkin": {
+      "id": "community.example.visual-theme.steering-hud",
+      "name": "완전한 조향 HUD 예시",
+      "colors": {
+        "neutral": "#F4EEE2",
+        "surface": "#101820"
+      },
+      "guidanceColors": {
+        "direction": "#5ED4E6",
+        "target": "#E86FC0",
+        "aligned": "#86C65A",
+        "centerMarker": "#E7C64B"
+      },
+      "opacity": {
+        "guideLine": 0.2,
+        "tick": 0.25,
+        "majorTick": 0.55,
+        "minorTick": 0.3,
+        "compassText": 0.65,
+        "minorCompassText": 0.35,
+        "centerLabel": 0.55,
+        "targetMarkerSurface": 0.7,
+        "targetLabelSurface": 0.8
+      },
+      "centerMarker": {
+        "verticalLength": 112,
+        "horizontalLength": 64,
+        "diamondSize": 12,
+        "lineWidth": 1
+      }
+    },
+    "mapHudSkin": {
+      "id": "community.example.visual-theme.map-hud",
+      "name": "완전한 지도 HUD 예시",
+      "colors": {
+        "surface": "#07131D",
+        "text": "#F4EEE2",
+        "mutedText": "#A9BAC5",
+        "border": "#8FA6B5",
+        "accent": "#E8A33A",
+        "connected": "#86C65A",
+        "waiting": "#E7C64B",
+        "editText": "#F4EEE2"
+      },
+      "frame": {
+        "statusSurfaceOpacity": 0.75,
+        "highlightedSurfaceOpacity": 0.8,
+        "borderOpacity": 0.6,
+        "editSurfaceOpacity": 0.9,
+        "editBorderWidth": 2
+      },
+      "mapTheme": {
+        "vectorOpacity": 0.82,
+        "oceanColor": "#07131D",
+        "oceanOpacity": 0.08,
+        "showLandFill": true,
+        "landFillColor": "#12212E",
+        "landFillOpacity": 0.52,
+        "showCoastline": true,
+        "coastlineColor": "#F4EEE2",
+        "coastlineOpacity": 0.72,
+        "coastlineWidth": 0.9,
+        "coastlinePattern": "solid",
+        "showSeaRegions": true,
+        "seaRegionColor": "#E8A33A",
+        "seaRegionOpacity": 0.68,
+        "seaRegionWidth": 1,
+        "seaRegionPattern": "solid",
+        "showCurrentSeaRegion": true,
+        "currentSeaRegionColor": "#5ED4E6",
+        "currentSeaRegionOpacity": 0.18,
+        "showSeaRegionLabels": true,
+        "seaRegionLabelColor": "#E7C64B",
+        "seaRegionLabelOpacity": 0.78,
+        "seaRegionLabelSize": 10
+      },
+      "navigationTheme": {
+        "course": { "color": "#F28A38", "pattern": "solid", "width": 2.2, "opacity": 0.92 },
+        "compass": { "color": "#F4EEE2", "pattern": "solid", "width": 1.25, "opacity": 0.48 },
+        "mouse": { "color": "#C8D7E1", "pattern": "dotted", "width": 1, "opacity": 0.3 },
+        "track": { "color": "#4FD8E0", "pattern": "solid", "width": 1.5, "opacity": 0.65 },
+        "route": { "color": "#E86FC0", "pattern": "dashed", "width": 2, "opacity": 0.8 }
+      }
+    },
+    "markerSet": {
+      "id": "community.example.visual-theme.markers",
+      "name": "완전한 벡터 마커 예시",
+      "ship": {
+        "background": "#07131D",
+        "backgroundOpacity": 0.82,
+        "border": "#FFF2C9",
+        "fill": "#F28A38",
+        "stroke": "#5D351D",
+        "radius": 8,
+        "length": 9,
+        "halfWidth": 5,
+        "strokeWidth": 1
+      },
+      "route": {
+        "fill": "#F4EEE2",
+        "text": "#0E1E2B",
+        "inactiveStroke": "#5A6672",
+        "waypointShape": "circle",
+        "destinationShape": "diamond",
+        "waypointRadius": 10,
+        "destinationRadius": 11,
+        "strokeWidth": 2,
+        "automatic": {
+          "fill": "#8FC8D6",
+          "text": "#0E1E2B",
+          "stroke": "#406E7A",
+          "shape": "circle",
+          "radius": 7,
+          "strokeWidth": 1
+        }
+      },
+      "poi": {
+        "background": "#07131D",
+        "backgroundOpacity": 0.84,
+        "border": "#DCE7ED",
+        "focus": "#F0C768",
+        "focusText": "#FFF2C9",
+        "labelText": "#E6EDF1",
+        "labelHalo": "#07131D",
+        "radius": 7,
+        "glyphRadius": 4.5,
+        "labelFontSize": 10,
+        "types": {
+          "port": { "fill": "#F28A38", "shape": "circle" },
+          "guild_city": { "fill": "#E86FC0", "shape": "diamond" },
+          "landing": { "fill": "#6FA34B", "shape": "triangle" },
+          "outskirts": { "fill": "#D8C7A8", "shape": "square" },
+          "inland": { "fill": "#AA7940", "shape": "diamond" },
+          "inland_city": { "fill": "#E8792E", "shape": "circle" },
+          "private_farm": { "fill": "#93B963", "shape": "square" },
+          "sea": { "fill": "#4FD8E0", "shape": "diamond" }
+        }
+      },
+      "personal": {
+        "border": "#FFF2C9",
+        "glyph": "#FFF8E5",
+        "radius": 10,
+        "glyphStrokeWidth": 2,
+        "icons": {
+          "star": { "fill": "#B879D6" },
+          "port": { "fill": "#4F91C7" },
+          "trade": { "fill": "#D59B45" },
+          "danger": { "fill": "#B84F45" },
+          "discovery": { "fill": "#55B88B" },
+          "memo": { "fill": "#6F7F8C" }
+        }
+      }
+    }
+  }
+}

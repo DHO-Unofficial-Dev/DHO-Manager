@@ -1,0 +1,77 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>구성요소 API — DHO 리소스팩 문서</title><meta name="description" content="mapData, poiData, markerSet과 HUD 스킨 구성요소 참조"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=JetBrains+Mono:wght@400;600&display=swap"><link rel="stylesheet" href="../../../assets/site.css?v=2.1.2"><link rel="stylesheet" href="../docs.css"></head><body>
+<header class="site-header"><div class="site-shell site-header__inner"><a class="site-brand" href="../../../">DHO Manager</a><nav class="site-nav"><a href="../../../">제품</a><a href="../../">리소스팩</a><a aria-current="page" href="../">문서</a><a class="site-header__action" href="https://github.com/DHO-Unofficial-Dev/DHO-Manager/releases/latest">다운로드</a></nav></div></header>
+<div class="docs-layout"><aside class="docs-sidebar" data-open="false"><button class="docs-mobile-index" data-docs-menu>문서 목록 열기</button><div class="docs-version"><span>규격 1</span><span>안정</span></div><input class="docs-search" data-docs-search type="search" placeholder="문서 검색"><nav class="docs-nav"><div class="docs-nav__group"><span class="docs-nav__title">시작하기</span><a data-doc-link href="../">소개</a><a data-doc-link href="../manifest/">manifest.json</a></div><div class="docs-nav__group"><span class="docs-nav__title">API 참조</span><a data-doc-link aria-current="page" href="./">구성요소</a><a data-doc-link href="../assets/">파일과 정적 자산</a><a data-doc-link href="../tooling/">제작 도구</a></div><div class="docs-nav__group"><span class="docs-nav__title">제작 지원</span><a data-doc-link href="../agent/">사람과 AI로 만들기</a><a data-doc-link href="../schema/">JSON Schema</a><a data-doc-link href="../../examples/">완성 예제</a></div><div class="docs-nav__group"><span class="docs-nav__title">도구</span><a data-doc-link href="../../">브라우저 생성기</a><a data-doc-link href="../../#community">커뮤니티 팩</a></div></nav></aside>
+<article class="docs-article"><div class="docs-breadcrumb"><a href="../">문서</a><span>/</span>구성요소</div><h1>구성요소 API</h1><p class="lead">하나의 팩은 필요한 구성요소만 선언할 수 있습니다. 사용자는 설치할 때 구성요소를 선택하며 활성 팩 스택에서 우선순위가 높은 동일 구성요소가 최종값이 됩니다.</p><div class="docs-callout"><strong>실행 가능한 참조</strong><p><a href="../../examples/">완성 예제</a>에서 최소 거점 팩과 모든 화면·마커 토큰을 담은 테마 팩을 소스와 설치 파일로 함께 확인할 수 있습니다.</p></div>
+<h2 id="common">공통 선언</h2><p><code>components</code> 아래의 각 항목에는 안정 ID와 표시 이름이 필요합니다. 외부 JSON을 읽는 데이터 구성요소는 파일 경로를 추가로 선언합니다.</p><div class="docs-table-wrap"><table class="docs-table"><thead><tr><th>키</th><th>데이터 파일</th><th>합성 방식</th></tr></thead><tbody><tr><td>mapData</td><td>coastline, seaRegions</td><td>가장 높은 활성 팩 하나</td></tr><tr><td>poiData</td><td>source</td><td>가장 높은 활성 팩 하나</td></tr><tr><td>markerSet</td><td>선택 이미지 자산</td><td>가장 높은 활성 팩과 안전 폴백</td></tr><tr><td>infoPanelSkin</td><td>없음</td><td>가장 높은 활성 팩 하나</td></tr><tr><td>steeringHudSkin</td><td>없음</td><td>가장 높은 활성 팩 하나</td></tr><tr><td>mapHudSkin</td><td>없음</td><td>가장 높은 활성 팩 하나</td></tr></tbody></table></div>
+<h2 id="map-data">mapData</h2><p>게임 세계 좌표 <code>16384×8192</code>의 해안선과 해역 면을 제공합니다. 각 JSON은 별도 스키마 검증과 좌표 범위 검사를 통과해야 합니다.</p><div class="docs-code"><pre><code>"mapData": {
+  "id": "community.example.world-map",
+  "name": "예시 세계 지도",
+  "dataVersion": "2026-08-06",
+  "coordinateSpace": "game 16384x8192",
+  "coastline": "components/map-data/coastline.json",
+  "seaRegions": "components/map-data/sea-regions.json"
+}</code></pre></div><p>해역은 대표점이 아니라 폴리곤 배열입니다. 표시 면이 없는 구획용 해역의 빈 <code>polygons</code>도 유효합니다. 세계 X축은 순환하므로 경계 0/16384를 지나는 도형은 규격에 맞게 분할해야 합니다.</p>
+<h2 id="poi-data">poiData</h2><p>추가 거점, 내장 거점 좌표 대체 또는 내장 거점 숨김을 원자적으로 제공합니다.</p><div class="docs-code"><pre><code>{
+  "pois": [
+    {
+      "id": "community.example.my-port",
+      "name": "예시 항구",
+      "type": "port",
+      "x": 15784,
+      "y": 3205
+    },
+    {
+      "id": "community.example.my-inland-city",
+      "name": "예시 내륙도시",
+      "aliases": ["예시 내륙"],
+      "type": "inland_city",
+      "x": 15748,
+      "y": 3180,
+      "coordinateRole": "display",
+      "entrancePoiIds": ["community.example.my-port"]
+    }
+  ],
+  "coordinateOverrides": [],
+  "hiddenPoiIds": []
+}</code></pre></div>
+<div class="docs-table-wrap"><table class="docs-table"><thead><tr><th>필드</th><th>제한</th><th>설명</th></tr></thead><tbody><tr><td>pois</td><td>최대 10,000</td><td>내장 ID와 충돌하지 않는 새 거점</td></tr><tr><td>type</td><td>열거형</td><td><code>port</code>, <code>guild_city</code>, <code>landing</code>, <code>outskirts</code>, <code>inland</code>, <code>inland_city</code>, <code>private_farm</code>, <code>sea</code></td></tr><tr><td>coordinateRole</td><td>sailing/display</td><td>표시 전용 좌표는 목적지·도착 판정에 직접 사용하지 않음</td></tr><tr><td>entrancePoiIds</td><td>1~16</td><td>표시 전용 거점으로 들어가는 실제 항구·상륙지 또는 연결 거점</td></tr><tr><td>coordinateOverrides</td><td>내장 poiId</td><td>내장 이름과 관계를 유지하고 좌표만 변경</td></tr><tr><td>hiddenPoiIds</td><td>내장 poiId</td><td>다른 거점의 입구 관계를 끊지 않는 범위에서 숨김</td></tr></tbody></table></div>
+<h2 id="marker-set">markerSet</h2><p>선박, 경로점, 목적지, 거점과 개인 표식의 벡터 토큰 또는 이미지 슬롯을 정의합니다. 이미지가 없는 슬롯은 같은 팩의 벡터 선언으로, 유효하지 않은 선택은 내장 기본값으로 복구됩니다. 아래 코드는 필수 벡터 토큰을 생략하고 이미지·추가 표식 부분만 보인 발췌입니다.</p><div class="docs-code"><pre><code>"markerSet": {
+  "id": "community.example.markers",
+  "name": "예시 마커",
+  "assets": {
+    "supply": {
+      "path": "components/markers/supply.png",
+      "displayWidth": 24,
+      "displayHeight": 24,
+      "anchorX": 0.5,
+      "anchorY": 0.5,
+      "rotateWithHeading": false
+    }
+  },
+  "slots": {
+    "ship": "ship",
+    "automaticWaypoint": "auto-waypoint"
+  },
+  "personal": {
+    "customTypes": {
+      "community.example.supply": {
+        "name": "보급지",
+        "fallbackIcon": "port",
+        "asset": "supply"
+      }
+    }
+  }
+}</code></pre></div><p>추가 개인 표식 유형은 팩당 최대 32개입니다. ID에는 제작자 네임스페이스를 포함하고 <code>name</code>은 1~40자, <code>fallbackIcon</code>은 <code>star</code>, <code>port</code>, <code>trade</code>, <code>danger</code>, <code>discovery</code>, <code>memo</code> 중 하나를 사용합니다.</p><div class="docs-callout"><strong>2.1.x 호환</strong><p><code>automaticWaypoint</code>, <code>route.automatic</code>, <code>personal.customTypes</code>는 선택 필드입니다. 필드가 없는 1.1.x 팩도 계속 동작하고 새 앱이 내장 기본값을 보충합니다.</p></div>
+<h2 id="info-skin">infoPanelSkin</h2><p>항해 정보 패널의 색과 프레임을 정의합니다. 선택적 <code>navigator</code> 객체는 Manager 본체가 아니라 네비게이터 메뉴·표면에만 적용됩니다.</p><div class="docs-table-wrap"><table class="docs-table"><thead><tr><th>그룹</th><th>주요 필드</th><th>소유 범위</th></tr></thead><tbody><tr><td>colors</td><td>panelBackground, primaryText, accent, status, arrival*</td><td>정보 패널</td></tr><tr><td>frame</td><td>borderWidth, cornerRadius, backdropBlur, shadow</td><td>정보 패널</td></tr><tr><td>navigator.colors</td><td>background, surface, text, line, accent, danger, focus</td><td>네비게이터 GUI</td></tr><tr><td>navigator.cornerRadius</td><td>0~허용 범위</td><td>네비게이터 GUI</td></tr></tbody></table></div>
+<h2 id="steering-skin">steeringHudSkin</h2><p>조향 HUD의 중립색·표면, 눈금 투명도와 중앙 표식 치수를 정의합니다. <code>guidanceColors</code>를 생략하면 기존 <code>colors.neutral</code>에서 파생합니다.</p><div class="docs-code"><pre><code>"guidanceColors": {
+  "direction": "#E8873A",
+  "target": "#4FD8E0",
+  "aligned": "#6FA34B",
+  "centerMarker": "#E7C64B"
+}</code></pre></div>
+<h2 id="map-hud-skin">mapHudSkin</h2><p>지도 HUD 상태창의 색·프레임과 지도 시각 언어를 정의합니다. <code>mapTheme</code>은 바다·육지·해안선·해역 색을, <code>navigationTheme</code>은 실제 이동·나침반·마우스·항적·목적지 경로선의 색과 패턴을 제공합니다.</p><div class="docs-callout docs-callout--warning"><strong>팩과 사용자 설정의 분리</strong><p>팩은 색상과 <code>solid</code>·<code>dashed</code>·<code>dotted</code> 패턴을 소유합니다. 사용자의 표시 여부, 위치, 크기, 투명도와 선 굵기는 팩을 바꿔도 유지됩니다.</p></div>
+<section id="app-icon"><h2>appIcon</h2><p>열려 있는 네비게이터 창 아이콘을 교체합니다. 매니저와 네비게이터가 공유하는 트레이 아이콘은 리소스팩의 영향을 받지 않습니다.</p><div class="docs-code"><pre><code>"appIcon": {
+  "window": "components/app-icon/window.png"
+}</code></pre></div><p>파일은 512KB 이하, 한 변 16~512px의 정사각 PNG여야 합니다. 활성 팩이 여럿이면 설치 스택 우선순위가 가장 높은 팩의 appIcon을 적용하며, 팩 비활성화·삭제 시 내장 아이콘으로 복귀합니다.</p></section>
+<nav class="docs-page-nav"><a href="../manifest/"><span>이전</span>← manifest.json</a><a href="../assets/"><span>다음</span>파일과 정적 자산 →</a></nav></article>
+<aside class="docs-toc"><span class="docs-toc__title">이 페이지</span><a href="#common">공통 선언</a><a href="#map-data">mapData</a><a href="#poi-data">poiData</a><a href="#marker-set">markerSet</a><a href="#info-skin">infoPanelSkin</a><a href="#steering-skin">steeringHudSkin</a><a href="#map-hud-skin">mapHudSkin</a></aside></div><script src="../docs.js"></script></body></html>

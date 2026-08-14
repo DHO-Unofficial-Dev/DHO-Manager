@@ -1,0 +1,30 @@
+{
+  "formatVersion": 1,
+  "packId": "community.example.poi-basic",
+  "name": "커뮤니티 거점 예시",
+  "author": "제작자 이름",
+  "version": "0.1.0",
+  "license": "CC0-1.0",
+  "publisher": {
+    "id": "community.example",
+    "name": "예시 배포자"
+  },
+  "source": {
+    "name": "예시 팩 제작자"
+  },
+  "compatibility": {
+    "minimumManagerVersion": "2.0.4",
+    "maximumManagerVersionExclusive": "3.0.0"
+  },
+  "files": {},
+  "componentRequirements": {},
+  "components": {
+    "poiData": {
+      "id": "community.example.poi-basic.data",
+      "name": "예시 추가 거점",
+      "dataVersion": "2026-08-04",
+      "coordinateSpace": "game 16384x8192",
+      "source": "components/poi-data/pois.json"
+    }
+  }
+}

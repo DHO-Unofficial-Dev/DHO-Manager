@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://manager.dhoport.app/resource-pack/schema/coastline.schema.json",
+  "title": "DHO coastline canonical data",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["meta", "polygons"],
+  "properties": {
+    "meta": { "type": "object", "required": ["coordSpace"], "properties": { "coordSpace": { "const": "game 16384x8192" } }, "additionalProperties": true },
+    "polygons": { "type": "array", "items": { "$ref": "#/$defs/polygon" } }
+  },
+  "$defs": {
+    "point": { "type": "array", "prefixItems": [{ "type": "number", "minimum": 0, "maximum": 16384 }, { "type": "number", "minimum": 0, "maximum": 8192 }], "items": false, "minItems": 2, "maxItems": 2 },
+    "polygon": { "type": "object", "additionalProperties": false, "required": ["hole", "points"], "properties": { "hole": { "type": "boolean" }, "parentIndex": { "type": "integer", "minimum": 0 }, "points": { "type": "array", "minItems": 3, "items": { "$ref": "#/$defs/point" } } } }
+  }
+}

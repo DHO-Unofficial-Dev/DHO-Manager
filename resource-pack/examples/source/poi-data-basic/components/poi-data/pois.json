@@ -1,0 +1,31 @@
+{
+  "pois": [
+    {
+      "id": "community.example.my-port",
+      "name": "예시 항구",
+      "type": "port",
+      "x": 15784,
+      "y": 3205
+    },
+    {
+      "id": "community.example.my-landing",
+      "name": "예시 상륙지",
+      "type": "landing",
+      "x": 15720,
+      "y": 3250
+    },
+    {
+      "id": "community.example.my-inland-city",
+      "name": "예시 내륙도시",
+      "aliases": ["예시 내륙"],
+      "type": "inland_city",
+      "x": 15748,
+      "y": 3180,
+      "coordinateRole": "display",
+      "entrancePoiIds": [
+        "community.example.my-port",
+        "community.example.my-landing"
+      ]
+    }
+  ]
+}

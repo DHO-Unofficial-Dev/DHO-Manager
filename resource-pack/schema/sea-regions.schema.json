@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://manager.dhoport.app/resource-pack/schema/sea-regions.schema.json",
+  "title": "DHO sea region canonical data",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["meta", "seas"],
+  "properties": {
+    "meta": { "type": "object", "required": ["coordSpace"], "properties": { "coordSpace": { "const": "game 16384x8192" } }, "additionalProperties": true },
+    "seas": { "type": "array", "items": { "$ref": "#/$defs/sea" } }
+  },
+  "$defs": {
+    "point": { "type": "array", "prefixItems": [{ "type": "number", "minimum": 0, "maximum": 16384 }, { "type": "number", "minimum": 0, "maximum": 8192 }], "items": false, "minItems": 2, "maxItems": 2 },
+    "label": { "type": ["object", "null"], "required": ["x", "y"], "properties": { "x": { "type": "number", "minimum": 0, "maximum": 16384 }, "y": { "type": "number", "minimum": 0, "maximum": 8192 } }, "additionalProperties": false },
+    "divide": { "type": "object", "required": ["divideWest", "divideEast", "divideNorth", "divideSouth"], "properties": { "divideWest": { "type": "number", "minimum": 0, "maximum": 16384 }, "divideEast": { "type": "number", "minimum": 0, "maximum": 16384 }, "divideNorth": { "type": "number", "minimum": 0, "maximum": 8192 }, "divideSouth": { "type": "number", "minimum": 0, "maximum": 8192 } }, "additionalProperties": false },
+    "sea": { "type": "object", "additionalProperties": true, "required": ["entryId", "name", "seaRegion", "polygons"], "properties": { "entryId": { "type": "string", "minLength": 1 }, "name": { "type": "string", "minLength": 1 }, "seaRegion": { "type": "string", "minLength": 1 }, "parentId": { "type": ["string", "null"] }, "labelPos": { "$ref": "#/$defs/label" }, "divide": { "$ref": "#/$defs/divide" }, "polygons": { "type": "array", "items": { "type": "array", "minItems": 3, "items": { "$ref": "#/$defs/point" } } } } }
+  }
+}

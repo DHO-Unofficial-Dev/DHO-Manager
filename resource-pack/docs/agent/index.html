@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>사람과 AI를 위한 제작 흐름 — DHO 리소스팩 문서</title>
+  <meta name="description" content="사람이 직접 만들거나 AI 에이전트와 함께 DHO 리소스팩을 제작하는 검증 가능한 작업 흐름">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=JetBrains+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="../../../assets/site.css?v=2.1.2"><link rel="stylesheet" href="../docs.css">
+</head>
+<body>
+<header class="site-header"><div class="site-shell site-header__inner"><a class="site-brand" href="../../../">DHO Manager</a><nav class="site-nav"><a href="../../../">제품</a><a href="../../">리소스팩</a><a aria-current="page" href="../">문서</a><a class="site-header__action" href="https://github.com/DHO-Unofficial-Dev/DHO-Manager/releases/latest">다운로드</a></nav></div></header>
+<div class="docs-layout"><aside class="docs-sidebar" data-open="false"><button class="docs-mobile-index" data-docs-menu>문서 목록 열기</button><div class="docs-version"><span>규격 1</span><span>안정</span></div><input class="docs-search" data-docs-search type="search" placeholder="문서 검색"><nav class="docs-nav"><div class="docs-nav__group"><span class="docs-nav__title">시작하기</span><a data-doc-link href="../">소개</a><a data-doc-link href="../manifest/">manifest.json</a></div><div class="docs-nav__group"><span class="docs-nav__title">API 참조</span><a data-doc-link href="../components/">구성요소</a><a data-doc-link href="../assets/">파일과 정적 자산</a><a data-doc-link href="../tooling/">제작 도구</a></div><div class="docs-nav__group"><span class="docs-nav__title">제작 지원</span><a data-doc-link aria-current="page" href="./">사람과 AI로 만들기</a><a data-doc-link href="../schema/">JSON Schema</a><a data-doc-link href="../../examples/">완성 예제</a></div><div class="docs-nav__group"><span class="docs-nav__title">도구</span><a data-doc-link href="../../">브라우저 생성기</a><a data-doc-link href="../../#community">커뮤니티 팩</a></div></nav></aside>
+<article class="docs-article"><div class="docs-breadcrumb"><a href="../">문서</a><span>/</span>사람과 AI로 만들기</div><h1>사람이 이해하고, AI도 실행하는 제작 흐름</h1><p class="lead">이 문서의 기준은 사람에게 읽히는 API 문서입니다. 같은 규격을 JSON Schema와 <code>llms.txt</code>로도 제공하여 IDE나 AI 에이전트가 추측 없이 작업하도록 돕습니다.</p>
+<div class="docs-callout"><strong>AI에게 건넬 주소</strong><p><code>https://manager.dhoport.app/llms.txt</code> 하나를 먼저 읽히세요. 세부 규격, 스키마, 예제와 검증 도구의 정식 주소가 모두 연결되어 있습니다.</p></div>
+<h2 id="choose">어떤 방법을 쓸까</h2><div class="docs-table-wrap"><table class="docs-table"><thead><tr><th>방법</th><th>적합한 작업</th><th>결과</th></tr></thead><tbody><tr><td>브라우저 생성기</td><td>추가 거점, 기본 화면 색상과 항해선 테마</td><td>즉시 내려받는 .dho-pack</td></tr><tr><td>Node 제작 도구</td><td>전체 테마, 이미지 마커, 여러 파일, 반복 배포</td><td>검증·해시·압축을 재현 가능한 명령으로 처리</td></tr><tr><td>AI + Node 도구</td><td>스키마를 따라 초안을 만들고 오류를 반복 수정</td><td>사람이 검토할 소스 폴더와 검증된 아카이브</td></tr></tbody></table></div>
+<h2 id="workflow">공통 작업 순서</h2><ol><li><a href="../components/">구성요소 목록</a>에서 바꿀 범위를 고릅니다.</li><li><a href="../../examples/">가장 가까운 완성 예제</a>를 복사하고 고유한 <code>packId</code>, 제작자, 버전을 지정합니다.</li><li>색상·마커·거점 파일을 편집합니다. JSON 편집기는 <a href="../schema/">JSON Schema</a>를 연결할 수 있습니다.</li><li>아래 세 명령을 순서대로 실행합니다.</li><li>Manager에서 설치 미리보기와 실제 HUD·네비게이터 화면을 확인합니다.</li></ol>
+<div class="docs-code"><pre><code>node tools/validate-pack.mjs ./my-pack
+node tools/build-dho-pack.mjs ./my-pack ./dist/my-pack.dho-pack
+node tools/verify-archive.mjs ./dist/my-pack.dho-pack</code></pre></div>
+<h2 id="prompt">AI에 요청하는 예시</h2><div class="docs-code"><pre><code>https://manager.dhoport.app/llms.txt 를 먼저 읽어라.
+DHO Manager 2.1.x용 formatVersion 1 리소스팩을 만들어라.
+목표: 짙은 바다색 GUI, 청록색 항적, 작은 자동 보조점.
+visual-theme 완성 예제를 기반으로 하고 원본 폴더도 보존하라.
+validate → build → verify를 모두 통과시킨 뒤
+변경한 토큰과 최종 .dho-pack 경로를 보고하라.</code></pre></div><p>AI가 ZIP을 손으로 만들거나 검증기를 생략하게 두지 마세요. 색상과 모양은 팩의 영역이고 HUD 위치·크기·투명도 같은 개인 배치는 사용자 설정의 영역입니다.</p>
+<h2 id="deliverables">완료 기준</h2><ul><li>UTF-8 <code>manifest.json</code>과 필요한 정적 파일이 원본 폴더에 남아 있습니다.</li><li><code>files</code> SHA-256은 빌드 도구가 생성하며 수동으로 꾸미지 않습니다.</li><li>세 검증 명령이 모두 성공합니다.</li><li>기존 2.1.x 팩에서 알 수 없는 새 필드는 무시할 수 있도록 선택 필드로만 확장합니다.</li><li>Manager 설치 화면에서 썸네일, 구성요소, 추가 표식 수를 사람이 확인합니다.</li></ul>
+<nav class="docs-page-nav"><a href="../tooling/"><span>이전</span>← 제작 도구</a><a href="../schema/"><span>다음</span>JSON Schema →</a></nav></article>
+<aside class="docs-toc"><span class="docs-toc__title">이 페이지</span><a href="#choose">방법 선택</a><a href="#workflow">작업 순서</a><a href="#prompt">AI 요청 예시</a><a href="#deliverables">완료 기준</a></aside></div><script src="../docs.js"></script></body></html>

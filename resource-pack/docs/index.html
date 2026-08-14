@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>리소스팩 규격 소개 — DHO Manager 문서</title>
+  <meta name="description" content="DHO Manager .dho-pack 규격 1의 개념, 구성요소와 제작 흐름을 설명합니다.">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=JetBrains+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="../../assets/site.css?v=2.1.2"><link rel="stylesheet" href="./docs.css">
+</head>
+<body>
+  <header class="site-header"><div class="site-shell site-header__inner"><a class="site-brand" href="../../">DHO Manager</a><nav class="site-nav"><a href="../../">제품</a><a href="../">리소스팩</a><a aria-current="page" href="./">문서</a><a class="site-header__action" href="https://github.com/DHO-Unofficial-Dev/DHO-Manager/releases/latest">다운로드</a></nav></div></header>
+  <div class="docs-layout">
+    <aside class="docs-sidebar" data-open="false"><button class="docs-mobile-index" data-docs-menu>문서 목록 열기</button><div class="docs-version"><span>규격 1</span><span>안정</span></div><input class="docs-search" data-docs-search type="search" placeholder="문서 검색" aria-label="문서 검색"><nav class="docs-nav"><div class="docs-nav__group"><span class="docs-nav__title">시작하기</span><a data-doc-link aria-current="page" href="./">소개</a><a data-doc-link href="./manifest/">manifest.json</a></div><div class="docs-nav__group"><span class="docs-nav__title">API 참조</span><a data-doc-link href="./components/">구성요소</a><a data-doc-link href="./assets/">파일과 정적 자산</a><a data-doc-link href="./tooling/">제작 도구</a></div><div class="docs-nav__group"><span class="docs-nav__title">제작 지원</span><a data-doc-link href="./agent/">사람과 AI로 만들기</a><a data-doc-link href="./schema/">JSON Schema</a><a data-doc-link href="../examples/">완성 예제</a></div><div class="docs-nav__group"><span class="docs-nav__title">도구</span><a data-doc-link href="../">브라우저 생성기</a><a data-doc-link href="../#community">커뮤니티 팩</a></div></nav></aside>
+    <article class="docs-article"><div class="docs-breadcrumb"><a href="../">리소스팩</a><span>/</span>문서</div><h1>리소스팩 규격</h1><p class="lead">`.dho-pack`은 DHO Navigator의 지도 데이터, 거점, 마커와 HUD 외형을 배포하는 선언형 패키지입니다. 이 문서는 새 팩 제작자가 사용하는 <strong>formatVersion 1</strong>을 설명합니다.</p>
+      <div class="docs-callout"><strong>현재 기준</strong><p>DHO Manager 2.1.x는 규격 1 팩을 검증하고 구성요소별로 설치합니다. 개발 중 사용한 규격 0은 읽기 호환만 유지하며 새 팩 제작에는 사용하지 않습니다.</p></div>
+      <h2 id="model">동작 모델</h2><p>리소스팩은 루트의 <code>manifest.json</code>과 정적 JSON·이미지 파일을 담은 ZIP 컨테이너입니다. 공유할 때 확장자는 반드시 <code>.dho-pack</code>을 사용합니다.</p>
+      <div class="docs-code"><pre><code>my-pack/
+├─ manifest.json
+├─ thumbnail.webp
+└─ components/
+   ├─ poi-data/pois.json
+   └─ markers/ship.svg</code></pre></div>
+      <p>앱은 파일을 연 시점에 구조, 크기, 경로, SHA-256과 구성요소 스키마를 검사합니다. 검사를 통과해도 즉시 적용하지 않으며, 설치 대화상자에서 사용자가 고른 구성요소만 로컬 스택에 저장합니다.</p>
+      <h2 id="boundaries">보안 경계</h2><ul><li>HTML, JavaScript, DLL, 임의 CSS와 실행 파일은 허용하지 않습니다.</li><li>외부 URL은 출처 메타데이터일 뿐 런타임 요청이나 신뢰 인증을 의미하지 않습니다.</li><li>마커는 PNG·WebP·제한된 정적 SVG를, 팩 썸네일은 PNG·WebP·JPEG·GIF를 읽습니다.</li><li>리소스팩은 색상·선형·마커 외형을 정하고, 사용자의 위치·크기·투명도 설정은 덮어쓰지 않습니다.</li></ul>
+      <h2 id="components">구성요소 선택</h2><div class="docs-table-wrap"><table class="docs-table"><thead><tr><th>키</th><th>역할</th><th>대표 사용처</th></tr></thead><tbody><tr><td>mapData</td><td>해안선과 해역 면</td><td>지도 본체·HUD</td></tr><tr><td>poiData</td><td>거점 추가, 좌표 대체, 숨김</td><td>지도·검색·목적지</td></tr><tr><td>markerSet</td><td>선박·경로·거점·개인 표식</td><td>지도 본체·HUD</td></tr><tr><td>infoPanelSkin</td><td>항해 정보 패널 외형</td><td>정보 HUD·네비게이터 패널</td></tr><tr><td>steeringHudSkin</td><td>조향 방향띠와 중앙 기준</td><td>조향 HUD</td></tr><tr><td>mapHudSkin</td><td>지도 색상·항해선·HUD 프레임</td><td>지도 본체·HUD</td></tr></tbody></table></div>
+      <h2 id="start">빠른 시작</h2><p>추가 거점이나 기본 화면 테마는 <a href="../">브라우저 생성기</a>로 만들 수 있습니다. 이미지 마커, 해안선 데이터 또는 전체 토큰을 다루려면 Node.js 20 이상의 제작 도구를 사용합니다.</p><div class="docs-code"><pre><code>node tools/validate-pack.mjs ./my-pack
+node tools/build-dho-pack.mjs ./my-pack ./dist/my-pack.dho-pack
+node tools/verify-archive.mjs ./dist/my-pack.dho-pack</code></pre></div>
+      <div class="docs-callout docs-callout--warning"><strong>직접 ZIP 금지</strong><p><code>files</code>에는 <code>manifest.json</code>을 제외한 모든 파일의 SHA-256이 필요합니다. 공유본은 패키징 도구로 만들어야 앱 검증을 통과합니다.</p></div>
+      <h2 id="reference">참조 문서</h2><div class="docs-card-grid"><a class="docs-card" href="./manifest/"><span>SCHEMA</span><strong>manifest.json</strong><p>식별자, 호환 버전, 출처, 파일 해시와 의존성 필드.</p></a><a class="docs-card" href="./components/"><span>COMPONENTS</span><strong>구성요소 API</strong><p>지도, 거점, 마커와 세 가지 화면 스킨의 선언 구조.</p></a><a class="docs-card" href="./assets/"><span>ASSETS</span><strong>파일과 이미지</strong><p>경로 규칙, 크기 제한, 썸네일과 SVG 안전 규칙.</p></a><a class="docs-card" href="./tooling/"><span>TOOLING</span><strong>검증과 패키징</strong><p>Node 도구 명령, 실패 원인과 배포 전 점검표.</p></a><a class="docs-card" href="./agent/"><span>WORKFLOW</span><strong>사람과 AI로 만들기</strong><p>사람이 검토하고 AI도 그대로 실행할 수 있는 공통 제작 흐름.</p></a><a class="docs-card" href="./schema/"><span>JSON SCHEMA</span><strong>편집기·에이전트 지원</strong><p>필드 자동완성과 범위 검사를 위한 기계 판독 규격.</p></a><a class="docs-card" href="../examples/"><span>EXAMPLES</span><strong>검증된 완성 예제</strong><p>거점 최소 팩과 전체 화면 테마의 소스와 설치 파일.</p></a></div>
+      <nav class="docs-page-nav"><span></span><a href="./manifest/"><span>다음</span>manifest.json →</a></nav>
+      <div class="docs-callout"><strong>앱 아이콘 확장</strong><p><code>appIcon</code> 구성요소로 네비게이터 창 아이콘을 정사각 PNG로 교체할 수 있습니다. 공용 트레이 아이콘은 변경하지 않습니다. 자세한 선언은 <a href="./components/#app-icon">구성요소 API</a>를 참고하세요.</p></div>
+    </article>
+    <aside class="docs-toc"><span class="docs-toc__title">이 페이지</span><a href="#model">동작 모델</a><a href="#boundaries">보안 경계</a><a href="#components">구성요소 선택</a><a href="#start">빠른 시작</a><a href="#reference">참조 문서</a></aside>
+  </div>
+  <script src="./docs.js"></script>
+</body></html>

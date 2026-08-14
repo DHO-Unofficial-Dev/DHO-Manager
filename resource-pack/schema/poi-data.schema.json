@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://manager.dhoport.app/resource-pack/schema/poi-data.schema.json",
+  "title": "DHO poiData source",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "pois": { "type": "array", "maxItems": 10000, "items": { "$ref": "#/$defs/poi" } },
+    "coordinateOverrides": { "type": "array", "maxItems": 10000, "items": { "$ref": "#/$defs/override" } },
+    "hiddenPoiIds": { "type": "array", "maxItems": 10000, "uniqueItems": true, "items": { "$ref": "#/$defs/id" } }
+  },
+  "anyOf": [
+    { "required": ["pois"] },
+    { "required": ["coordinateOverrides"] },
+    { "required": ["hiddenPoiIds"] }
+  ],
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$" },
+    "x": { "type": "integer", "minimum": 0, "maximum": 16383 },
+    "y": { "type": "integer", "minimum": 0, "maximum": 8191 },
+    "poi": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "type", "x", "y"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "type": { "enum": ["port", "guild_city", "landing", "outskirts", "inland", "inland_city", "private_farm", "sea"] },
+        "x": { "$ref": "#/$defs/x" },
+        "y": { "$ref": "#/$defs/y" },
+        "coordinateRole": { "enum": ["navigation", "display"] },
+        "aliases": { "type": "array", "minItems": 1, "maxItems": 32, "uniqueItems": true, "items": { "type": "string", "minLength": 1, "maxLength": 128 } },
+        "entrancePoiIds": { "type": "array", "minItems": 1, "maxItems": 16, "uniqueItems": true, "items": { "$ref": "#/$defs/id" } }
+      }
+    },
+    "override": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["poiId", "x", "y"],
+      "properties": {
+        "poiId": { "$ref": "#/$defs/id" },
+        "x": { "$ref": "#/$defs/x" },
+        "y": { "$ref": "#/$defs/y" }
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+# DHO Manager
+
+> DHO Navigator와 선언형 `.dho-pack` 리소스팩의 공식 문서 진입점입니다.
+
+리소스팩을 만드는 AI 에이전트는 다음 순서로 문서를 읽으세요.
+
+1. 전체 에이전트 규격: https://manager.dhoport.app/resource-pack/llms-full.txt
+2. manifest JSON Schema: https://manager.dhoport.app/resource-pack/schema/manifest.schema.json
+3. 거점 데이터 JSON Schema: https://manager.dhoport.app/resource-pack/schema/poi-data.schema.json
+4. 해안선 JSON Schema: https://manager.dhoport.app/resource-pack/schema/coastline.schema.json
+5. 해역 JSON Schema: https://manager.dhoport.app/resource-pack/schema/sea-regions.schema.json
+6. 검증된 예제: https://manager.dhoport.app/resource-pack/examples/
+7. Node 제작 도구: https://manager.dhoport.app/resource-pack/dho-pack-node-tools.zip
+
+사람용 문서:
+
+- 소개: https://manager.dhoport.app/resource-pack/docs/
+- manifest.json: https://manager.dhoport.app/resource-pack/docs/manifest/
+- 구성요소 API: https://manager.dhoport.app/resource-pack/docs/components/
+- 파일과 자산: https://manager.dhoport.app/resource-pack/docs/assets/
+- 제작 도구: https://manager.dhoport.app/resource-pack/docs/tooling/
+
+중요 규칙:
+
+- 새 팩은 `formatVersion: 1`만 사용합니다.
+- 컨테이너는 ZIP이지만 배포 확장자는 `.dho-pack`입니다.
+- 직접 ZIP을 만들지 말고 Node 제작 도구로 `files` SHA-256을 생성합니다.
+- 최종 성공 조건은 `validate-pack`, `build-dho-pack`, `verify-archive` 세 명령 통과입니다.
+- JSON Schema는 구조 편집을 돕고, 배포된 Node 검증기와 DHO Manager가 최종 판정자입니다.

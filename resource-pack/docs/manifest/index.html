@@ -1,0 +1,55 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>manifest.json — DHO 리소스팩 문서</title><meta name="description" content="DHO Manager 리소스팩 manifest.json 규격 1 필드 참조"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=JetBrains+Mono:wght@400;600&display=swap"><link rel="stylesheet" href="../../../assets/site.css?v=2.1.2"><link rel="stylesheet" href="../docs.css"></head><body>
+<header class="site-header"><div class="site-shell site-header__inner"><a class="site-brand" href="../../../">DHO Manager</a><nav class="site-nav"><a href="../../../">제품</a><a href="../../">리소스팩</a><a aria-current="page" href="../">문서</a><a class="site-header__action" href="https://github.com/DHO-Unofficial-Dev/DHO-Manager/releases/latest">다운로드</a></nav></div></header>
+<div class="docs-layout"><aside class="docs-sidebar" data-open="false"><button class="docs-mobile-index" data-docs-menu>문서 목록 열기</button><div class="docs-version"><span>규격 1</span><span>안정</span></div><input class="docs-search" data-docs-search type="search" placeholder="문서 검색"><nav class="docs-nav"><div class="docs-nav__group"><span class="docs-nav__title">시작하기</span><a data-doc-link href="../">소개</a><a data-doc-link aria-current="page" href="./">manifest.json</a></div><div class="docs-nav__group"><span class="docs-nav__title">API 참조</span><a data-doc-link href="../components/">구성요소</a><a data-doc-link href="../assets/">파일과 정적 자산</a><a data-doc-link href="../tooling/">제작 도구</a></div><div class="docs-nav__group"><span class="docs-nav__title">제작 지원</span><a data-doc-link href="../agent/">사람과 AI로 만들기</a><a data-doc-link href="../schema/">JSON Schema</a><a data-doc-link href="../../examples/">완성 예제</a></div><div class="docs-nav__group"><span class="docs-nav__title">도구</span><a data-doc-link href="../../">브라우저 생성기</a><a data-doc-link href="../../#community">커뮤니티 팩</a></div></nav></aside>
+<article class="docs-article"><div class="docs-breadcrumb"><a href="../">문서</a><span>/</span>manifest.json</div><h1>manifest.json</h1><p class="lead">팩의 식별자, 출처, 호환 범위, 파일 무결성과 구성요소 진입점을 선언하는 루트 문서입니다. UTF-8 JSON으로 저장하고 팩 최상위에 정확히 한 개만 둡니다.</p><div class="docs-callout"><strong>편집기 지원</strong><p><a href="../../schema/manifest.schema.json">manifest JSON Schema</a>를 IDE에 연결하면 필드 자동완성과 값 범위 검사를 받을 수 있습니다. 최종 파일은 Node 검증기로 다시 확인하세요.</p></div>
+<h2 id="example">전체 예시</h2><div class="docs-code"><pre><code>{
+  "formatVersion": 1,
+  "packId": "community.example.navigation",
+  "name": "예시 항해팩",
+  "author": "제작자 이름",
+  "version": "0.1.0",
+  "license": "CC-BY-4.0",
+  "publisher": {
+    "id": "community.example",
+    "name": "예시 배포자",
+    "url": "https://example.com"
+  },
+  "source": {
+    "name": "제작자 사이트",
+    "url": "https://example.com/dho-pack"
+  },
+  "thumbnail": "thumbnail.webp",
+  "compatibility": {
+    "minimumManagerVersion": "2.1.0",
+    "maximumManagerVersionExclusive": "3.0.0"
+  },
+  "files": {},
+  "componentRequirements": {
+    "markerSet": ["mapData"]
+  },
+  "components": {
+    "poiData": {
+      "id": "community.example.navigation.poi-data",
+      "name": "예시 추가 거점",
+      "dataVersion": "2026-08-06",
+      "coordinateSpace": "game 16384x8192",
+      "source": "components/poi-data/pois.json"
+    }
+  }
+}</code></pre></div>
+<h2 id="root-fields">루트 필드</h2><div class="docs-table-wrap"><table class="docs-table"><thead><tr><th>필드</th><th>형식</th><th>필수</th><th>설명</th></tr></thead><tbody><tr><td>formatVersion</td><td>정수</td><td>예</td><td>새 팩은 <code>1</code>만 사용합니다.</td></tr><tr><td>packId</td><td>문자열</td><td>예</td><td>팩의 안정 ID. <code>publisher.id</code>와 같거나 그 ID로 시작해야 합니다.</td></tr><tr><td>name</td><td>문자열</td><td>예</td><td>사용자 화면에 표시할 팩 이름입니다.</td></tr><tr><td>author</td><td>문자열</td><td>예</td><td>개인 또는 팀의 표시명입니다.</td></tr><tr><td>version</td><td>SemVer</td><td>예</td><td>팩 자체 버전입니다. 앱 버전과 독립적입니다.</td></tr><tr><td>license</td><td>문자열</td><td>예</td><td>자산과 데이터의 이용 조건입니다.</td></tr><tr><td>publisher</td><td>객체</td><td>예</td><td>배포자 귀속 정보입니다.</td></tr><tr><td>source</td><td>객체</td><td>예</td><td>데이터·자산의 출처입니다.</td></tr><tr><td>thumbnail</td><td>경로</td><td>아니요</td><td>팩 카드용 이미지입니다.</td></tr><tr><td>compatibility</td><td>객체</td><td>예</td><td>호환 가능한 Manager 버전 범위입니다.</td></tr><tr><td>files</td><td>객체</td><td>예</td><td>모든 비매니페스트 파일 경로와 SHA-256입니다.</td></tr><tr><td>componentRequirements</td><td>객체</td><td>아니요</td><td>같은 팩 구성요소 사이의 의존성입니다.</td></tr><tr><td>components</td><td>객체</td><td>예</td><td>팩이 제공하는 구성요소 선언입니다.</td></tr></tbody></table></div>
+<h2 id="identifiers">식별자 규칙</h2><p><code>packId</code>, <code>publisher.id</code>와 구성요소 ID는 소문자 영문 또는 숫자로 시작하고 이후 소문자 영문, 숫자, 마침표, 밑줄, 하이픈만 사용합니다. 최대 128자입니다.</p><div class="docs-code"><pre><code>community.example
+community.example.navigation
+community.example.navigation.marker-set</code></pre></div><div class="docs-callout docs-callout--warning"><strong>업데이트 안정성</strong><p>같은 팩을 업데이트할 때 <code>packId</code>를 바꾸지 말고 <code>version</code>만 올립니다. ID를 바꾸면 앱은 별도의 팩으로 취급합니다.</p></div>
+<h2 id="publisher">publisher와 source</h2><p><code>publisher.id</code>, <code>publisher.name</code>, <code>source.name</code>은 필수입니다. 선택 URL은 HTTPS만 허용합니다. 배포자 정보는 출처 귀속이며 디지털 서명이나 서비스 제공자 인증이 아닙니다.</p><div class="docs-table-wrap"><table class="docs-table"><thead><tr><th>필드</th><th>제한</th><th>의미</th></tr></thead><tbody><tr><td>publisher.id</td><td>안정 ID</td><td>팩 ID의 네임스페이스를 소유하는 표시용 식별자</td></tr><tr><td>publisher.name</td><td>문자열</td><td>설치 화면에 표시되는 배포자</td></tr><tr><td>publisher.url</td><td>HTTPS</td><td>배포자 소개 주소</td></tr><tr><td>source.name</td><td>문자열</td><td>원본 데이터 또는 자산 출처 설명</td></tr><tr><td>source.url</td><td>HTTPS</td><td>원본 또는 제작 문서 주소</td></tr></tbody></table></div>
+<h2 id="compatibility">호환 범위</h2><p><code>minimumManagerVersion</code>은 포함 하한, <code>maximumManagerVersionExclusive</code>는 제외 상한입니다. 둘 다 SemVer를 사용합니다.</p><div class="docs-code"><pre><code>"compatibility": {
+  "minimumManagerVersion": "2.1.0",
+  "maximumManagerVersionExclusive": "3.0.0"
+}</code></pre></div><p>이 예시는 2.1.0 이상, 3.0.0 미만을 뜻합니다. 새 선택 필드를 추가한 2.1.x 앱은 필드가 없는 기존 1.1.x 팩에 내장 기본값을 적용합니다.</p>
+<h2 id="files">files 무결성</h2><p>키는 팩 루트 기준 POSIX 경로, 값은 <code>sha256:</code> 접두사가 붙은 소문자 64자리 SHA-256입니다. <code>manifest.json</code> 자체는 목록에서 제외하고 나머지 파일은 빠짐없이 포함합니다.</p><div class="docs-code"><pre><code>"files": {
+  "thumbnail.webp": "sha256:c6d7…64자리…84af",
+  "components/poi-data/pois.json": "sha256:88a1…64자리…12e0"
+}</code></pre></div><p>패키징 도구가 임시 매니페스트에 이 객체를 자동 생성하므로 일반적으로 손으로 작성하지 않습니다.</p>
+<h2 id="requirements">componentRequirements</h2><p>한 구성요소가 같은 팩의 다른 구성요소와 함께 적용되어야 할 때만 선언합니다. 다른 팩이나 내장값으로 의존성을 충족할 수 없습니다.</p><ul><li>자기 자신, 중복과 순환 의존성은 거부됩니다.</li><li>팩에 선언하지 않은 구성요소를 참조할 수 없습니다.</li><li>설치·활성 전환 시 필수 구성요소가 원자적으로 함께 처리됩니다.</li></ul>
+<nav class="docs-page-nav"><a href="../"><span>이전</span>← 소개</a><a href="../components/"><span>다음</span>구성요소 →</a></nav></article>
+<aside class="docs-toc"><span class="docs-toc__title">이 페이지</span><a href="#example">전체 예시</a><a href="#root-fields">루트 필드</a><a href="#identifiers">식별자 규칙</a><a href="#publisher">publisher와 source</a><a href="#compatibility">호환 범위</a><a href="#files">files 무결성</a><a href="#requirements">의존성</a></aside></div><script src="../docs.js"></script></body></html>
